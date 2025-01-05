@@ -19,41 +19,35 @@ namespace html
             Id = string.Empty;
             Classes = new List<string>();
         }
-        public static Selector piruk(string quary) { 
-            var arrs = quary.Split(' ');
-            Selector root = new Selector(), currentIterate = root;
-            foreach (var item in arrs)
+        public static Selector piruk(string query)
+        {
+            var parts = query.Split(' ');
+            Selector root = new Selector();
+            Selector currentSelector = root;
+
+            foreach (var part in parts)
             {
-                List<string> list = new List<string>();
-                var j = 0;
-                for (var i = 1; i < item.Length && j < item.Length; i++)
+                var selector = new Selector();
+                if (part.StartsWith('#'))
                 {
-                    if (item[i] == '.' || item[i] == '#')
-                    {
-                        list.Add(item.Substring(j, i-j));
-                        j = i;
-                    }
+                    selector.Id = part.Substring(1);
                 }
-                list.Add(item.Substring(j, item.Length-j));
-                if (!(list[0].StartsWith('.') || list[0].StartsWith('#')))
-                    foreach (var tag in HtmlHelper.Instance.htmlTags)
-                        if (list[0].StartsWith(tag))
-                        {
-                            currentIterate.TagName = tag;
-                        }
-                foreach (var item1 in list)
+                else if (part.StartsWith('.'))
                 {
-                   if(item1.StartsWith('#'))
-                        currentIterate.Id = item1.Substring(1);
-                   else if(item1.StartsWith('.'))
-                        currentIterate.Classes.Add(item1.Substring(1));
+                    selector.Classes.Add(part.Substring(1));
                 }
-                var child = new Selector();
-                child.parent = currentIterate;
-                currentIterate.child = child;
-                currentIterate = child;
+                else
+                {
+                    selector.TagName = part;
+                }
+
+                currentSelector.child = selector;
+                selector.parent = currentSelector;
+                currentSelector = selector;
             }
+
             return root;
         }
+
     }
 }

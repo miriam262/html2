@@ -68,19 +68,18 @@ namespace html
             // 2. אם הסלקטור הנוכחי הוא האחרון, נוסיף את האלמנט לתוצאה
             if (selector.child == null)
             {
-                result.Add(currentElement);
+                result.Add(currentElement);  // Adding to HashSet ensures uniqueness
             }
             else
             {
                 // 3. אחרת, נמשיך לרוץ על כל הצאצאים עם הסלקטור הבא (כולל נכדים ונינים)
                 foreach (var descendant in currentElement.Descendants())
                 {
-                    // אנו מבצעים את הקריאה הרקורסיבית גם עבור כל צאצא, ולא רק לילד הראשון.
                     FindElementsRecursive(descendant, selector.child, result);
                 }
             }
-
         }
+
         private bool MatchesSelector(HtmlElement element, Selector selector)
         {
             // 1. אם יש לסלקטור שם תג, נוודא שהאלמנט תואם
